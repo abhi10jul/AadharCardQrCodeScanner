@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme"
+    android:weightSum="1"
+    tools:context=".AcqsActivity">
+
+    <fragment
+        android:id="@+id/barcode"
+        android:name="com.google.android.gms.samples.vision.barcodereader.BarcodeCapture"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        app:gvb_auto_focus="true"
+        app:gvb_code_format="code_39|aztec"
+        app:gvb_flash="false"
+        app:gvb_rect_colors="@array/rect_color" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fbtnClose"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/padding_10dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:src="@drawable/ic_close_black_24dp"
+        android:tint="@android:color/white"
+        app:backgroundTint="@android:color/transparent"
+        app:fabSize="normal" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:fontFamily="sans-serif-smallcaps"
+        android:gravity="center"
+        android:padding="@dimen/padding_10dp"
+        android:text="Scan Your Aadhar Card QR code"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fbtnFlash"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/padding_10dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:src="@drawable/ic_flash_on_black_24dp"
+        android:tint="@android:color/white"
+        app:backgroundTint="@android:color/transparent"
+        app:fabSize="normal" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fbtnFocus"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/padding_10dp"
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:foregroundGravity="center_horizontal|center_vertical"
+        android:src="@drawable/ic_center_focus_weak_black_24dp"
+        android:tint="@android:color/white"
+        app:backgroundTint="@android:color/transparent"
+        app:fabSize="normal" />
+</RelativeLayout>
