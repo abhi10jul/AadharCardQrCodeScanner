@@ -26,7 +26,8 @@ Add the dependency
 	        implementation 'com.github.abhi10jul:AadharCardQrCodeScanner:1.0'
 	}
   
-###### on Kotlin language to use like
+  
+### on Kotlin language to use like
 
 ##### Step 3. 
 
@@ -76,3 +77,60 @@ Add the dependency
             }
         }
     }
+
+
+### on Java language to use like
+
+##### Step 3. 
+
+	//set the request code change if you want
+	final int GETAADHARDATA = 101;
+	//if you want add any label like above screenshot if you don't then don't pass any bundle value define below
+	String label = "Scan Your Aadhar Card QR code";
+        Intent intent = new Intent(this, com.aadharcardqrscan.AcqsActivity.class);
+        if (!"".equals(label)) {
+            intent.putExtra("textmsg", label);
+        }
+        startActivityForResult(intent, GETAADHARDATA);
+
+
+##### Step 4. 
+
+
+	//get the result from QR code
+	
+	   @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case GETAADHARDATA:
+                if (resultCode == RESULT_OK) {
+                    com.aadharcardqrscan.UidModel getAllAadharDetails = data.getParcelableExtra("result");
+                    String getAadharNumber = getAllAadharDetails.AADHARNUMBER;
+                    String getFullName = getAllAadharDetails.FULLNAME;
+                    String getGender = getAllAadharDetails.GENDER; //M for Male F for Female T for Transgender
+                    String getYearBIRTH = getAllAadharDetails.YEAROFBIRTH;
+                    String getCareOf = getAllAadharDetails.CAREOF;
+                    String getHouse = getAllAadharDetails.HOUSE;
+                    String getStreet = getAllAadharDetails.STREET;
+                    String getLandMark = getAllAadharDetails.LANDMARK;
+                    String getLocality = getAllAadharDetails.LOCALITY;
+                    String getVilageTownCity = getAllAadharDetails.VILLAGETOWNCITY;
+                    String getPostOfficeName = getAllAadharDetails.POSTOFFICE;
+                    String getDistrict = getAllAadharDetails.DISTRICT;
+                    String getSubDistrict = getAllAadharDetails.SUBDISTRICT;
+                    String getState = getAllAadharDetails.STATE;
+                    String getPinCode = getAllAadharDetails.POSTALCODE;
+                    String getDateOfBirth = getAllAadharDetails.DATEOFBIRTH;
+                    String getCountry = getAllAadharDetails.COUNTRY;
+                }
+                break;
+        }
+
+    }
+    
+    
+    
+ 
+ 
+ Thank You
