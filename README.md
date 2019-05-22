@@ -23,7 +23,7 @@ Add the JitPack repository to your build file in your root build.gradle at the e
 Add the dependency
 
     dependencies {
-	        implementation 'com.github.abhi10jul:AadharCardQrCodeScanner:1.0.0'
+	       implementation 'com.github.abhi10jul:AadharCardQrCodeScanner:1.0.1'
 	}
   
   
