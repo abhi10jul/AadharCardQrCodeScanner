@@ -7,6 +7,8 @@ QR Scanning library based on Mobile Vision for android devices API 15 and up
 
 ![In action](https://github.com/abhi10jul/AadharCardQrCodeScanner/blob/master/ss.png)
 
+![In action](https://github.com/abhi10jul/AadharCardQrCodeScanner/blob/master/AadharCardQrScanSdk/videogif.gif)
+
 #### adding as a dependency
 
 ### on JitPack
@@ -23,7 +25,7 @@ Add the JitPack repository to your build file in your root build.gradle at the e
 Add the dependency
 
     dependencies {
-	       implementation 'com.github.abhi10jul:AadharCardQrCodeScanner:1.0.1'
+	       implementation 'com.github.abhi10jul:AadharCardQrCodeScanner:1.0'
 	}
   
   
