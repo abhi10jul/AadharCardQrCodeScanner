@@ -46,6 +46,7 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
     private final int FLASH = 101;
     private final int FOCUS = 102;
     private final int CLOSE = 103;
+    private AlertDialog alert = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,35 +54,16 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
         myHandler = new MyHandler();
         view = LayoutInflater.from(AcqsActivity.this).inflate(R.layout.acqsactivity, null);
         setContentView(view);
-        myHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AcqsActivity.this.init();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    myHandler.showDialog(AcqsActivity.this, "Invalid Json Request");
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    myHandler.showDialog(AcqsActivity.this, e.getMessage());
-                }
-            }
-        });
     }
 
 
     private void init() throws NullPointerException, JSONException {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            this.changeText = bundle.containsKey("textmsg") ? bundle.getString("textmsg") : "";
+            this.changeText = bundle.containsKey("label") ? bundle.getString("label") : "";
         }
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(this.changeText);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         this.barcodeCapture = (BarcodeCapture) getSupportFragmentManager().findFragmentById(R.id.barcode);
         this.fBtnFlash = (FloatingActionButton) findViewById(R.id.fbtnFlash);
         this.fBtnFocus = (FloatingActionButton) findViewById(R.id.fbtnFocus);
@@ -93,12 +75,6 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
         this.ivClose.setId(CLOSE);
         this.fBtnFlash.setId(FLASH);
         this.fBtnFocus.setId(FOCUS);
-    }
-
-    @Override
-    protected void onResume() {
-        checkForCameraPermission();
-        super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkForCameraPermission();
             if (ContextCompat.checkSelfPermission(this,
@@ -108,15 +84,46 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (this.barcodeCapture == null) {
+            myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        AcqsActivity.this.init();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        myHandler.showDialog(AcqsActivity.this, "Invalid Json Request");
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                        myHandler.showDialog(AcqsActivity.this, e.getMessage());
+                    }
+                }
+            });
+        } else {
+            checkForCameraPermission();
+            resumeBarcodeScanner();
+        }
+    }
+
     private void setBarcodeScanner() {
-        barcodeCapture.setShowDrawRect(true)
-                .setSupportMultipleScan(false)
-                .setTouchAsCallback(false)
-                .shouldAutoFocus(true)
-                .setShowFlash(false)
-                .setBarcodeFormat(Barcode.QR_CODE)
-                .setShouldShowText(false);
-        resumeBarcodeScanner();
+        if (barcodeCapture != null) {
+            barcodeCapture.setShowDrawRect(true)
+                    .setSupportMultipleScan(false)
+                    .setTouchAsCallback(false)
+                    .shouldAutoFocus(true)
+                    .setShowFlash(false)
+                    .setBarcodeFormat(Barcode.QR_CODE)
+                    .setShouldShowText(false);
+            resumeBarcodeScanner();
+        }
     }
 
     private void setFlashOnOff() {
@@ -156,13 +163,17 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void pauseBarcodeScanner() {
-        barcodeCapture.onPause();
-        barcodeCapture.refresh();
+        if (barcodeCapture != null) {
+            barcodeCapture.onPause();
+            barcodeCapture.refresh();
+        }
     }
 
     private void resumeBarcodeScanner() {
-        barcodeCapture.onResume();
-        barcodeCapture.refresh();
+        if (barcodeCapture != null) {
+            barcodeCapture.onResume();
+            barcodeCapture.refresh();
+        }
     }
 
     @Override
@@ -199,7 +210,7 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
                                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_CAMERA);
                             }
                         });
-                        AlertDialog alert = alertBuilder.create();
+                        alert = alertBuilder.create();
                         alert.show();
                     } catch (WindowManager.BadTokenException e) {
                         Log.e("WindowManagerBad ", e.toString());
@@ -209,9 +220,15 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 return false;
             } else {
+                if (alert != null && alert.isShowing()) {
+                    alert.dismiss();
+                }
                 return true;
             }
         } else {
+            if (alert != null && alert.isShowing()) {
+                alert.dismiss();
+            }
             return true;
         }
     }
@@ -223,6 +240,9 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                             == PackageManager.PERMISSION_GRANTED) {
+                        if (alert != null && alert.isShowing()) {
+                            alert.dismiss();
+                        }
                         setBarcodeScanner();
                     }
                 } else {
@@ -231,6 +251,7 @@ public class AcqsActivity extends AppCompatActivity implements View.OnClickListe
                 return;
             }
         }
+
     }
 
     @Override
